@@ -10,7 +10,7 @@ const plugins = [
   }),
 ];
 
-const filename = `duxe${NODE_ENV === 'production' ? '.min' : ''}.js`;
+const filename = `erux${NODE_ENV === 'production' ? '.min' : ''}.js`;
 
 NODE_ENV === 'production'  && plugins.push(
   new webpack.optimize.UglifyJsPlugin({
@@ -38,7 +38,7 @@ export default {
   output: {
     path: path.join(__dirname, 'dist'),
     filename,
-    library: 'Duxe',
+    library: 'Erux',
     libraryTarget: 'umd',
   },
 

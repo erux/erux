@@ -24,7 +24,7 @@ const on = (type, reducer) => {
 };
 
 let enhancerOn = false;
-const Duxe = {
+const Erux = {
   on,
   reducer: (state, action) => {
     if (enhancerOn) {
@@ -51,4 +51,4 @@ const Duxe = {
   },
 };
 
-export default Duxe;
+export default Erux;

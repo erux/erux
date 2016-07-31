@@ -1,10 +1,10 @@
 {
-  "name": "duxe",
+  "name": "erux",
   "version": "0.0.1",
   "description": "Reduced Redux for great justice.",
   "author": "Wolfgang Wedemeyer <wolf@okwolf.com>",
   "license": "MIT",
-  "main": "dist/duxe.js",
+  "main": "dist/erux.js",
   "jsnext:main": "src/index.js",
   "files": [
     "src",
@@ -12,13 +12,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/okwolf/duxe.git"
+    "url": "https://github.com/erux/erux.git"
   },
-  "homepage": "https://github.com/okwolf/duxe",
+  "homepage": "https://github.com/erux/erux",
   "keywords": [
     "redux",
     "flux",
-    "duxe",
+    "erux",
     "reducer",
     "enhancer"
   ],
@@ -65,7 +65,7 @@
     "reduce-reducers": "^0.1.1"
   },
   "scripts": {
-    "clean": "rimraf dist lib",
+    "clean": "rimraf dist lib coverage",
     "superclean": "npm run clean && rimraf node_modules",
     "build": "npm run build:commonjs && npm run build:umd && npm run build:umd:min",
     "prepublish": "npm run clean && npm run test && npm run build",

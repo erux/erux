@@ -1,49 +1,49 @@
 import { assert } from 'chai';
-import Duxe from '../src/index';
+import Erux from '../src/index';
 
-describe('Duxe', () => {
+describe('Erux', () => {
   const reducerError = 'reducer to be a function';
   describe('reducer function to get a reducer', () => {
     it('should be a function', () => {
-      assert.isFunction(Duxe.reducer);
-      assert.strictEqual(Duxe.reducer.length, 2);
+      assert.isFunction(Erux.reducer);
+      assert.strictEqual(Erux.reducer.length, 2);
     });
     it('should fail without any reducers', () => {
-      assert.throws(Duxe.reducer, reducerError);
+      assert.throws(Erux.reducer, reducerError);
     });
   });
 
   describe('enhancer function to get an enhancer', () => {
     it('should be a function', () => {
-      assert.isFunction(Duxe.enhancer);
-      assert.strictEqual(Duxe.enhancer.length, 1);
-      assert.isFunction(Duxe.enhancer());
-      assert.strictEqual(Duxe.enhancer().length, 3);
+      assert.isFunction(Erux.enhancer);
+      assert.strictEqual(Erux.enhancer.length, 1);
+      assert.isFunction(Erux.enhancer());
+      assert.strictEqual(Erux.enhancer().length, 3);
     });
     it('should accept a function and return a function', () => {
-      const enhancer = Duxe.enhancer(() => null);
+      const enhancer = Erux.enhancer(() => null);
       assert.isFunction(enhancer);
       assert.strictEqual(enhancer.length, 3);
     });
     it('should fail without any reducers', () => {
-      assert.throws(Duxe.enhancer(() => null), reducerError);
+      assert.throws(Erux.enhancer(() => null), reducerError);
     });
   });
 
   describe('on function to add a reducer for an action type', () => {
     it('should be a function', () => {
-      assert.isFunction(Duxe.on);
-      assert.strictEqual(Duxe.on.length, 2);
+      assert.isFunction(Erux.on);
+      assert.strictEqual(Erux.on.length, 2);
     });
     it('should fail without type', () => {
       const typeError = 'Type is required';
-      assert.throws(Duxe.on, typeError);
-      assert.throws(() => Duxe.on(''), typeError);
-      assert.throws(() => Duxe.on([]), typeError);
-      assert.throws(() => Duxe.on({}), typeError);
+      assert.throws(Erux.on, typeError);
+      assert.throws(() => Erux.on(''), typeError);
+      assert.throws(() => Erux.on([]), typeError);
+      assert.throws(() => Erux.on({}), typeError);
     });
     it('should fail without reducer', () => {
-      assert.throws(() => Duxe.on(' '), reducerError);
+      assert.throws(() => Erux.on(' '), reducerError);
     });
   });
 });
