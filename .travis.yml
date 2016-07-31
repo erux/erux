@@ -2,9 +2,9 @@ language: node_js
 node_js:
   - "6"
 script:
-  - npm run clean
-  - npm run build
-  - npm run test
+  - npm run superclean
+  - npm install
+  - npm run coveralls
 branches:
   only:
     - master
