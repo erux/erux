@@ -12,15 +12,14 @@ const checkTypeString = type => {
   }
 };
 
-let reducedReducer;
+let reducedReducer = state => state;
 
 const on = (type, reducer) => {
   checkTypeString(type);
   checkReducer(reducer);
   const nextReducer = (state, action) =>
     (action.type === type ? reducer(state, action) : state);
-  reducedReducer = reducedReducer
-    ? reduceReducers(nextReducer, reducedReducer) : nextReducer;
+  reducedReducer = reduceReducers(nextReducer, reducedReducer);
 };
 
 let enhancerOn = false;
@@ -28,18 +27,15 @@ const Erux = {
   on,
   reducer: (state, action) => {
     if (enhancerOn) {
-      throw new Error("Already using enhancer, can't also use reducer.");
+      return state;
     }
-    checkReducer(reducedReducer);
     return reducedReducer(state, action);
   },
   enhancer: createStore => (reducer, preloadedState, enhancer) => {
     checkReducer(reducer);
     const store = createStore(reducer, preloadedState, enhancer);
     const dispatch = action => {
-      if (reducedReducer) {
-        store.replaceReducer(reduceReducers(reducer, reducedReducer));
-      }
+      store.replaceReducer(reduceReducers(reducer, reducedReducer));
       store.dispatch(action);
     };
     enhancerOn = true;

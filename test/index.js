@@ -8,8 +8,9 @@ describe('Erux', () => {
       assert.isFunction(Erux.reducer);
       assert.strictEqual(Erux.reducer.length, 2);
     });
-    it('should fail without any reducers', () => {
-      assert.throws(Erux.reducer, reducerError);
+    it('should return same state without any reducers', () => {
+      const state = {};
+      assert.strictEqual(Erux.reducer(state, {}), state);
     });
   });
 
