@@ -60,9 +60,13 @@ describe('Erux', () => {
       assert.throws(() => on(''), typeError);
       assert.throws(() => on([]), typeError);
       assert.throws(() => on({}), typeError);
+      assert.throws(() => on(x => x), typeError);
     });
     it('should fail without reducer', () => {
       assert.throws(() => on(' '), reducerError);
+      assert.throws(() => on(' ', ''), reducerError);
+      assert.throws(() => on(' ', []), reducerError);
+      assert.throws(() => on(' ', {}), reducerError);
     });
     describe('when called with a simple number reducer', () => {
       const PLUS_ONE = 'PLUS_ONE';
