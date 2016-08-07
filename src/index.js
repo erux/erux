@@ -31,6 +31,7 @@ const Erux = {
     const dispatch = action => {
       store.replaceReducer(reduceReducers(reducer, reducedReducer));
       store.dispatch(action);
+      return action;
     };
     return {
       ...store,
