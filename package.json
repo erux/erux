@@ -72,6 +72,7 @@
     "posttest": "npm run lint",
     "lint": "eslint src test",
     "test": "cross-env BABEL_ENV=commonjs istanbul cover node_modules/mocha/bin/_mocha -- --compilers js:babel-core/register test/**.js",
+    "test:watch": "cross-env BABEL_ENV=commonjs mocha --watch --compilers js:babel-core/register",
     "test:debug": "cross-env BABEL_ENV=commonjs mocha --debug-brk --compilers js:babel-core/register",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
