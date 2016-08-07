@@ -22,6 +22,8 @@ const on = (type, reducer) => {
   reducedReducer = reduceReducers(nextReducer, reducedReducer);
 };
 
+const replaceReducer = reducer => { reducedReducer = reducer; };
+
 const Erux = {
   on,
   reducer: (state, action) => reducedReducer(state, action),
@@ -39,6 +41,7 @@ const Erux = {
       on,
     };
   },
+  replaceReducer,
 };
 
 export default Erux;
