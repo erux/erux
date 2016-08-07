@@ -22,15 +22,9 @@ const on = (type, reducer) => {
   reducedReducer = reduceReducers(nextReducer, reducedReducer);
 };
 
-let enhancerOn = false;
 const Erux = {
   on,
-  reducer: (state, action) => {
-    if (enhancerOn) {
-      return state;
-    }
-    return reducedReducer(state, action);
-  },
+  reducer: (state, action) => reducedReducer(state, action),
   enhancer: createStore => (reducer, preloadedState, enhancer) => {
     checkReducer(reducer);
     const store = createStore(reducer, preloadedState, enhancer);
@@ -38,7 +32,6 @@ const Erux = {
       store.replaceReducer(reduceReducers(reducer, reducedReducer));
       store.dispatch(action);
     };
-    enhancerOn = true;
     return {
       ...store,
       dispatch,
