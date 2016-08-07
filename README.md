@@ -47,7 +47,8 @@ const doubleReducer = (state, action) => {
   }
 }
 
-// Create your store with legacy reducer and enhancer, result will have the on function
+// Create your store with legacy reducer and our enhancer
+// The returned store will have the on function
 const enhancers = compose(applyMiddleware(logger), Erux.enhancer);
 const store = createStore(doubleReducer, 1, enhancers);
 

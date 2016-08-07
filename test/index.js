@@ -11,6 +11,7 @@ describe('Erux', () => {
     assert.strictEqual(reducer(initialState, {}), initialState);
   });
   beforeEach(() => {
+    // Start with a clean identity reducer for each test
     replaceReducer(state => state);
   });
   describe('reducer function to get a reducer', () => {
