@@ -4,7 +4,15 @@ import createMockStore from './create-mock-store';
 
 describe('Erux', () => {
   const reducerError = 'reducer to be a function';
-  const { reducer, enhancer, on } = Erux;
+  const { reducer, enhancer, on, replaceReducer } = Erux;
+  before(() => {
+    // Before replacing reducer, make sure the default one functions properly
+    const initialState = {};
+    assert.strictEqual(reducer(initialState, {}), initialState);
+  });
+  beforeEach(() => {
+    replaceReducer(state => state);
+  });
   describe('reducer function to get a reducer', () => {
     it('should be a function', () => {
       assert.isFunction(reducer);
@@ -58,7 +66,9 @@ describe('Erux', () => {
     });
     describe('when called with a simple number reducer', () => {
       const PLUS_ONE = 'PLUS_ONE';
-      on(PLUS_ONE, state => state + 1);
+      beforeEach(() => {
+        on(PLUS_ONE, state => state + 1);
+      });
       it('should result in a correct reducer being available', () => {
         assert.strictEqual(reducer(0, { type: PLUS_ONE }), 1);
         assert.strictEqual(reducer(99, { type: PLUS_ONE }), 100);
@@ -72,7 +82,9 @@ describe('Erux', () => {
     });
     describe('when called with a simple string reducer', () => {
       const CONCAT = 'CONCAT';
-      on(CONCAT, state => state.concat('cat'));
+      beforeEach(() => {
+        on(CONCAT, state => state.concat('cat'));
+      });
       it('should result in a correct reducer being available', () => {
         assert.strictEqual(reducer('', { type: CONCAT }), 'cat');
         assert.strictEqual(reducer('bob', { type: CONCAT }), 'bobcat');
@@ -100,7 +112,9 @@ describe('Erux', () => {
         loaded: true,
         request: pageToLoad,
       };
-      on(LOAD, loadReducer);
+      beforeEach(() => {
+        on(LOAD, loadReducer);
+      });
       it('should result in a correct reducer being available', () => {
         const reducedState = reducer(initialState, loadAction);
         assert.deepEqual(reducedState, expectedState);
@@ -110,6 +124,71 @@ describe('Erux', () => {
         store.dispatch(loadAction);
         assert.deepEqual(store.getState(), expectedState);
       });
+    });
+  });
+
+  describe('when used to create a store', () => {
+    // Helpers to add concat reducers
+    const letterReducer = letter => state => state.concat(letter);
+    const onFactory = obj => letter => obj.on(letter, letterReducer(letter));
+    const onLetterReducer = onFactory({ on });
+    it('with reducer should call reducers added anytime before they are dispatched', () => {
+      // Add reducer before creating store
+      onLetterReducer('A');
+      // Create store
+      const store = createMockStore(reducer, '');
+      // Add reducers after creating store but before dispatch
+      onLetterReducer('B');
+      // Dispatch some actions
+      store.dispatch({ type: 'A' });
+      store.dispatch({ type: 'B' });
+      // Add reducers after creating store and dispatch
+      onLetterReducer('C');
+      // Dispatch to remaining reducers
+      store.dispatch({ type: 'C' });
+      assert.strictEqual(store.getState(), 'ABC');
+    });
+    it('with enhancer should call reducers added anytime before they are dispatched', () => {
+      // Add reducer before creating store
+      onLetterReducer('A');
+      // Create store and store.on helper
+      const store = createMockStore(state => state, '', enhancer);
+      const onStoreLetterReducer = onFactory(store);
+      // Add reducers after creating store but before dispatch
+      onStoreLetterReducer('B');
+      onLetterReducer('C');
+      // Dispatch some actions
+      store.dispatch({ type: 'A' });
+      store.dispatch({ type: 'B' });
+      store.dispatch({ type: 'C' });
+      // Add reducers after creating store and dispatch
+      onLetterReducer('D');
+      onStoreLetterReducer('E');
+      // Dispatch to remaining reducers
+      store.dispatch({ type: 'D' });
+      store.dispatch({ type: 'E' });
+      assert.strictEqual(store.getState(), 'ABCDE');
+    });
+    it('with reducer and enhancer should call reducers twice', () => {
+      // Add reducer before creating store
+      onLetterReducer('A');
+      // Create store and store.on helper
+      const store = createMockStore(reducer, '', enhancer);
+      const onStoreLetterReducer = onFactory(store);
+      // Add reducers after creating store but before dispatch
+      onStoreLetterReducer('B');
+      onLetterReducer('C');
+      // Dispatch some actions
+      store.dispatch({ type: 'A' });
+      store.dispatch({ type: 'B' });
+      store.dispatch({ type: 'C' });
+      // Add reducers after creating store and dispatch
+      onLetterReducer('D');
+      onStoreLetterReducer('E');
+      // Dispatch to remaining reducers
+      store.dispatch({ type: 'D' });
+      store.dispatch({ type: 'E' });
+      assert.strictEqual(store.getState(), 'AABBCCDDEE');
     });
   });
 });
