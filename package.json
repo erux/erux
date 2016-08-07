@@ -1,6 +1,6 @@
 {
   "name": "erux",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Reduced Redux for great justice.",
   "author": "Wolfgang Wedemeyer <wolf@okwolf.com>",
   "license": "MIT",
