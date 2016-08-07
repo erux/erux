@@ -1,5 +1,6 @@
 import { assert } from 'chai';
 import Erux from '../src';
+import createMockStore from './create-mock-store';
 
 describe('Erux', () => {
   const reducerError = 'reducer to be a function';
@@ -59,16 +60,28 @@ describe('Erux', () => {
       const PLUS_ONE = 'PLUS_ONE';
       on(PLUS_ONE, state => state + 1);
       it('should result in a correct reducer being available', () => {
-        const reducedState = reducer(0, { type: PLUS_ONE });
-        assert.strictEqual(reducedState, 1);
+        assert.strictEqual(reducer(0, { type: PLUS_ONE }), 1);
+        assert.strictEqual(reducer(99, { type: PLUS_ONE }), 100);
+        assert.strictEqual(reducer(0, { type: 'WRONG_TYPE' }), 0);
+      });
+      it('should result in a correct enhancer being available', () => {
+        const store = createMockStore(state => state, 0, enhancer);
+        store.dispatch({ type: PLUS_ONE });
+        assert.strictEqual(store.getState(), 1);
       });
     });
     describe('when called with a simple string reducer', () => {
       const CONCAT = 'CONCAT';
       on(CONCAT, state => state.concat('cat'));
       it('should result in a correct reducer being available', () => {
-        const reducedState = reducer('', { type: CONCAT });
-        assert.strictEqual(reducedState, 'cat');
+        assert.strictEqual(reducer('', { type: CONCAT }), 'cat');
+        assert.strictEqual(reducer('bob', { type: CONCAT }), 'bobcat');
+        assert.strictEqual(reducer('', { type: 'WRONG_TYPE' }), '');
+      });
+      it('should result in a correct enhancer being available', () => {
+        const store = createMockStore(state => state, 'con', enhancer);
+        store.dispatch({ type: CONCAT });
+        assert.strictEqual(store.getState(), 'concat');
       });
     });
     describe('when called with a simple object reducer', () => {
@@ -82,7 +95,7 @@ describe('Erux', () => {
       });
       const initialState = { loading: true };
       const loadAction = { type: LOAD, pageToLoad };
-      const expectedReducedState = {
+      const expectedState = {
         loading: false,
         loaded: true,
         request: pageToLoad,
@@ -90,7 +103,12 @@ describe('Erux', () => {
       on(LOAD, loadReducer);
       it('should result in a correct reducer being available', () => {
         const reducedState = reducer(initialState, loadAction);
-        assert.deepEqual(reducedState, expectedReducedState);
+        assert.deepEqual(reducedState, expectedState);
+      });
+      it('should result in a correct enhancer being available', () => {
+        const store = createMockStore(state => state, initialState, enhancer);
+        store.dispatch(loadAction);
+        assert.deepEqual(store.getState(), expectedState);
       });
     });
   });
