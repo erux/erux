@@ -3,9 +3,7 @@ module.exports = {
   env: {
     mocha: true
   },
-  parserOptions:{
-    ecmaVersion: 6,
-    sourceType: "module",
+  parserOptions: {
     ecmaFeatures: {
       experimentalObjectRestSpread: true
     }
