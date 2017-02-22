@@ -14,7 +14,7 @@ This library enhances [Redux](https://github.com/reactjs/redux) either directly 
 npm install --save erux
 ```
 
-You can also use a [browser friendly compiled file](https://npmcdn.com/erux@latest/dist/erux.js) from NPM CDN (mostly for online demo / snippets).
+You can also use a [browser friendly compiled file](https://unpkg.com/erux@latest/dist/erux.js) from NPM CDN (mostly for online demo / snippets).
 
 
 ## Usage
