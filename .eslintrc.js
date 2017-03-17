@@ -1,5 +1,8 @@
 module.exports = {
-  extends: "eslint:recommended",
+  extends: [
+    'eslint:recommended',
+    'plugin:fp/recommended'
+  ],
   env: {
     mocha: true
   },
@@ -10,6 +13,7 @@ module.exports = {
     }
   },
   plugins: [
+    'fp',
     'prettier'
   ],
   rules: {
