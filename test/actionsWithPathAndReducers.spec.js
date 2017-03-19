@@ -1,16 +1,16 @@
 import { assert, expect } from 'chai';
 import sinon, { spy } from 'sinon';
-import { enhancer, withStorePathAndActions } from '../src';
+import { enhancer, actionsWithPathAndReducers } from '../src';
 import createMockStore from './createMockStore';
 
-describe('withStorePathAndActions', () => {
+describe('actionsWithPathAndReducers', () => {
   it('should be a function', () => {
-    assert.isFunction(withStorePathAndActions);
+    assert.isFunction(actionsWithPathAndReducers);
   });
   describe('when called', () => {
     describe('without a store', () => {
       it('should throw an error', () => {
-        assert.throws(() => withStorePathAndActions(), TypeError);
+        assert.throws(() => actionsWithPathAndReducers(), TypeError);
       });
     });
     describe('with a store', () => {
@@ -32,8 +32,16 @@ describe('withStorePathAndActions', () => {
       });
       describe('and path', () => {
         const path = 'state.path';
-        describe('and actions', () => {
-          const actions = {
+        describe('without actions', () => {
+          it('should return an empty object', () => {
+            const withAPathOnly = actionsWithPathAndReducers({
+              path
+            });
+            expect(withAPathOnly).to.deep.equal({});
+          });
+        });
+        describe('and reducers', () => {
+          const reducers = {
             inc: ({ counter = 0 }) => ({
               counter: counter + 1
             }),
@@ -42,24 +50,24 @@ describe('withStorePathAndActions', () => {
             }),
             CapitalAction: Function.prototype
           };
-          const withAStoreAndAPathAndActions = withStorePathAndActions({
-            store,
+          const withAPathAndReducers = actionsWithPathAndReducers({
             path,
-            actions
+            reducers
           });
           it('should return an object of action creators', () => {
-            assert.isObject(withAStoreAndAPathAndActions);
+            assert.isObject(withAPathAndReducers);
           });
           describe('inc property', () => {
-            const { inc } = withAStoreAndAPathAndActions;
+            const { inc } = withAPathAndReducers;
             it('should be a function', () => {
               assert.isFunction(inc);
             });
-            it('should dispatch the INC action when called', () => {
+            it('should create the INC action when called and handle the action when dispatched', () => {
               const action = inc();
               expect(action).to.deep.equal({
                 type: 'INC'
               });
+              dispatch(action);
               sinon.assert.alwaysCalledWithExactly(dispatch, action);
               expect(store.getState()).to.deep.equal({
                 state: {
@@ -68,7 +76,7 @@ describe('withStorePathAndActions', () => {
                   }
                 }
               });
-              inc();
+              dispatch(action);
               expect(store.getState()).to.deep.equal({
                 state: {
                   path: {
@@ -79,7 +87,7 @@ describe('withStorePathAndActions', () => {
             });
           });
           describe('incBy property', () => {
-            const { incBy } = withAStoreAndAPathAndActions;
+            const { incBy } = withAPathAndReducers;
             it('should be a function', () => {
               assert.isFunction(incBy);
             });
@@ -89,6 +97,7 @@ describe('withStorePathAndActions', () => {
                 type: 'INC_BY',
                 by: 2
               });
+              dispatch(action);
               sinon.assert.alwaysCalledWithExactly(dispatch, action);
               expect(store.getState()).to.deep.equal({
                 state: {
@@ -97,7 +106,7 @@ describe('withStorePathAndActions', () => {
                   }
                 }
               });
-              incBy({ by: 3 });
+              dispatch(incBy({ by: 3 }));
               expect(store.getState()).to.deep.equal({
                 state: {
                   path: {
@@ -108,7 +117,7 @@ describe('withStorePathAndActions', () => {
             });
           });
           describe('CapitalAction property', () => {
-            const { CapitalAction } = withAStoreAndAPathAndActions;
+            const { CapitalAction } = withAPathAndReducers;
             it('should be a function', () => {
               assert.isFunction(CapitalAction);
             });
@@ -117,6 +126,7 @@ describe('withStorePathAndActions', () => {
               expect(action).to.deep.equal({
                 type: 'CAPITAL_ACTION'
               });
+              dispatch(action);
               sinon.assert.alwaysCalledWithExactly(dispatch, action);
             });
           });

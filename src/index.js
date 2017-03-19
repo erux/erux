@@ -1,2 +1,5 @@
 export { default as enhancer } from './enhancer';
-export { default as withStorePathAndActions } from './withStorePathAndActions';
+export {
+  default as actionsWithPathAndReducers
+} from './actionsWithPathAndReducers';
+export { stateAtPath } from './paths';

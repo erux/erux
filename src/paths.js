@@ -20,3 +20,11 @@ export const updateStatePathWithReducer = (
         })
       }
     : reducer(state, action);
+
+export const stateAtPath = ({ state = {}, path }) =>
+  path
+    ? stateAtPath({
+        state: state[nextPart(path)],
+        path: remainingPart(path)
+      })
+    : state;

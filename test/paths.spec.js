@@ -2,7 +2,8 @@ import { assert, expect } from 'chai';
 import {
   nextPart,
   remainingPart,
-  updateStatePathWithReducer
+  updateStatePathWithReducer,
+  stateAtPath
 } from '../src/paths';
 
 describe('Path utility function', () => {
@@ -91,6 +92,57 @@ describe('Path utility function', () => {
             makeMeShout: 'I AM VERY QUIET'
           }
         }
+      });
+    });
+    it('should merge Parent and Child state', () => {
+      const reducer = ({ counter = 0 }) => ({ counter: counter + 1 });
+      expect(
+        updateStatePathWithReducer({
+          state: {
+            Parent: {
+              Child: {}
+            }
+          },
+          path: 'Parent.Child',
+          reducer
+        })
+      ).to.deep.equal({
+        Parent: {
+          Child: {
+            counter: 1
+          }
+        }
+      });
+    });
+  });
+  describe('stateAtPath', () => {
+    it('should be a function', () => {
+      assert.isFunction(stateAtPath);
+    });
+    it('should return same state with no path', () => {
+      const state = {};
+      expect(stateAtPath({ state })).to.deep.equal(state);
+    });
+    it('should return new object for nonexistant path', () => {
+      const state = {
+        existing: 'value'
+      };
+      expect(stateAtPath({ state, path: 'wrong.value' })).to.deep.equal({});
+    });
+    it('should return nested state with a path', () => {
+      const state = {
+        deeply: {
+          nested: {
+            values: {
+              here: 42
+            }
+          }
+        }
+      };
+      expect(
+        stateAtPath({ state, path: 'deeply.nested.values' })
+      ).to.deep.equal({
+        here: 42
       });
     });
   });
