@@ -1,20 +1,19 @@
 import { updateStatePathWithReducer } from './paths';
 import { getActionMapping } from './actionMapping';
 
-export default createStore =>
-  (reducer, preloadedState, enhancer) => {
-    const combinedReducer = (state, action) => {
-      const actionMapping = getActionMapping(action.type);
-      if (actionMapping) {
-        const { path, reducer } = actionMapping;
-        return updateStatePathWithReducer({
+const mapping = action => getActionMapping(action.type);
+
+const combinedReducer = reducer =>
+  (state, action) =>
+    mapping(action)
+      ? updateStatePathWithReducer({
           state,
-          path,
-          reducer,
+          path: mapping(action).path,
+          reducer: mapping(action).reducer,
           action
-        });
-      }
-      return reducer(state, action);
-    };
-    return createStore(combinedReducer, preloadedState, enhancer);
-  };
+        })
+      : reducer(state, action);
+
+export default createStore =>
+  (reducer, preloadedState, enhancer) =>
+    createStore(combinedReducer(reducer), preloadedState, enhancer);
