@@ -1,4 +1,4 @@
-export { default as enhancer } from './enhancer';
+export { default as makeReducer } from './makeReducer';
 export {
   default as actionsWithPathAndReducers
 } from './actionsWithPathAndReducers';
