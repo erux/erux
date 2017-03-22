@@ -4,11 +4,16 @@ import { getActionMapping } from './actionMapping';
 const mapping = action => getActionMapping(action.type);
 export default reducer =>
   (state, action) =>
-    mapping(action)
-      ? updateStatePathWithReducer({
-          state,
-          path: mapping(action).path,
-          reducer: mapping(action).reducer,
-          action
-        })
-      : reducer(state, action);
+    reducer(
+      (mapping(action) || []).reduce(
+        (currentState, { path, reducer }) =>
+          updateStatePathWithReducer({
+            state: currentState,
+            path,
+            reducer,
+            action
+          }),
+        state
+      ),
+      action
+    );

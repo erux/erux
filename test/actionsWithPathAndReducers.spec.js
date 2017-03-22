@@ -106,6 +106,35 @@ describe('actionsWithPathAndReducers', () => {
             });
           });
         });
+
+        describe('that have duplicate inc reducer for a different path', () => {
+          it('should create the INC action when called and update two parts of the state', () => {
+            const withDifferentPathAndDupReducers = actionsWithPathAndReducers({
+              path: 'different.path',
+              reducers: {
+                inc: reducers.inc
+              }
+            });
+            const { inc } = withDifferentPathAndDupReducers;
+            const action = inc();
+            expect(action).to.deep.equal({
+              type: 'INC'
+            });
+            const stateAfter = reducer(undefined, action);
+            expect(stateAfter).to.deep.equal({
+              different: {
+                path: {
+                  counter: 1
+                }
+              },
+              state: {
+                path: {
+                  counter: 1
+                }
+              }
+            });
+          });
+        });
       });
     });
   });
