@@ -4,7 +4,7 @@ let actionMappings = {};
 export const addActionMapping = ({ type, path, reducer }) =>
   // eslint-disable-next-line fp/no-mutation
   actionMappings[type] = [
-    ...(actionMappings[type] || []),
+    ...(actionMappings[type] || []).filter(mapping => mapping.path !== path),
     {
       path,
       reducer

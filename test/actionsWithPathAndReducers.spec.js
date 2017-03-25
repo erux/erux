@@ -111,11 +111,41 @@ describe('actionsWithPathAndReducers', () => {
           it('should create the INC action when called and update two parts of the state', () => {
             const withDifferentPathAndDupReducers = actionsWithPathAndReducers({
               path: 'different.path',
-              reducers: {
-                inc: reducers.inc
-              }
+              reducers
             });
             const { inc } = withDifferentPathAndDupReducers;
+            const action = inc();
+            expect(action).to.deep.equal({
+              type: 'INC'
+            });
+            const stateAfter = reducer(undefined, action);
+            expect(stateAfter).to.deep.equal({
+              different: {
+                path: {
+                  counter: 1
+                }
+              },
+              state: {
+                path: {
+                  counter: 1
+                }
+              }
+            });
+          });
+        });
+        describe('that have duplicate inc reducer for the same path', () => {
+          it('should create the INC action when called and update two parts of the state once', () => {
+            const withDupPathAndReducers = actionsWithPathAndReducers(
+              {
+                path,
+                reducers
+              },
+              {
+                path,
+                reducers
+              }
+            );
+            const { inc } = withDupPathAndReducers;
             const action = inc();
             expect(action).to.deep.equal({
               type: 'INC'
