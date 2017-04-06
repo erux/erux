@@ -1,5 +1,5 @@
 import { updateStatePathWithReducer } from './paths';
-import { getActionMapping } from './actionMapping';
+import { getActionMapping, getInitialState } from './actionMapping';
 
 const mapping = action => getActionMapping(action.type);
 export default reducer =>
@@ -13,7 +13,7 @@ export default reducer =>
             reducer,
             action
           }),
-        state
+        state || getInitialState()
       ),
       action
     );

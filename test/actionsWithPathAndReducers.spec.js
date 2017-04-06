@@ -1,5 +1,5 @@
 import { assert, expect } from 'chai';
-import { actionsWithPathAndReducers, makeReducer } from '../src';
+import { actionsWithPathAndReducers, makeReducer, initialState } from '../src';
 
 describe('actionsWithPathAndReducers', () => {
   it('should be a function', () => {
@@ -21,6 +21,9 @@ describe('actionsWithPathAndReducers', () => {
       });
       describe('and reducers', () => {
         const reducers = {
+          [initialState]: {
+            counter: 0
+          },
           inc: ({ counter = 0 }) => ({
             counter: counter + 1
           }),
@@ -37,10 +40,16 @@ describe('actionsWithPathAndReducers', () => {
         it('should return an object of action creators', () => {
           assert.isObject(withAPathAndReducers);
         });
-        it('should call existing reducer for unknown actions', () => {
-          const unknownAction = {};
+        it('should have default state for unknown action', () => {
+          const unknownAction = { type: 'UNKNOWN' };
           const stateAfter = reducer(undefined, unknownAction);
-          assert.isUndefined(stateAfter);
+          expect(stateAfter).to.deep.equal({
+            state: {
+              path: {
+                counter: 0
+              }
+            }
+          });
         });
         describe('inc property', () => {
           const { inc } = withAPathAndReducers;

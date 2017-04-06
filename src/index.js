@@ -3,3 +3,4 @@ export {
   default as actionsWithPathAndReducers
 } from './actionsWithPathAndReducers';
 export { stateAtPath } from './paths';
+export const initialState = '@@initialState';

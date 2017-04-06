@@ -1,7 +1,7 @@
 import { addActionMapping } from './actionMapping';
 
 const addUnderscoresBetween = (match, offset) => `${offset ? '_' : ''}${match}`;
-const actionFormat = name =>
+export const actionFormat = name =>
   name.replace(/[A-Z]/g, addUnderscoresBetween).toUpperCase();
 
 export default ({ path, reducers = {} }) =>
